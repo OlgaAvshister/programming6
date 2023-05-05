@@ -3,6 +3,7 @@ package dragon;
 import commands.CommandsWorker;
 import commands.StaticWorker;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -13,7 +14,7 @@ import java.util.Scanner;
  * Класс, отвечающий за создание дракона
  */
 
-public class Dragon implements Comparable<Dragon>{
+public class Dragon implements Comparable<Dragon>, Serializable {
 
     private Long id; //Поле не может быть null, Значение поля должно быть больше 0,
     // Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически

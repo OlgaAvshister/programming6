@@ -28,32 +28,32 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-//        while (true) {
-//            ServerSocket ss = new ServerSocket(40003); // создаём класс сервера, который будет работать с получением и обработкой запросов по порту 40001
-//            Socket s = ss.accept();
-//            Scanner in = new Scanner(s.getInputStream());
-//            PrintWriter pw = new PrintWriter(s.getOutputStream());
-//            String console = serverWork();
-//            if (console.equals("")) {
-//                while (in.hasNext()) {
-////                System.out.print("Client: ");
-//                    PacketForSend temp = new Gson().fromJson(in.nextLine(), PacketForSend.class);
-//                    String arguments = temp.open();
-////                System.out.println(arguments);
-////                System.out.print("Answer: ");
-//                    String result = cw.work(arguments);
-//                    pw.println(result);
-//                }
-//            } else {
-//                String result = cw.work(console);
-//                pw.println(result);
-//            }
-//            pw.flush();
-//            pw.close();
-//            in.close();
-//            s.close();
-//            ss.close();
-//        }
+// while (true) {
+// ServerSocket ss = new ServerSocket(40003); // создаём класс сервера, который будет работать с получением и обработкой запросов по порту 40001
+// Socket s = ss.accept();
+// Scanner in = new Scanner(s.getInputStream());
+// PrintWriter pw = new PrintWriter(s.getOutputStream());
+// String console = serverWork();
+// if (console.equals("")) {
+// while (in.hasNext()) {
+//// System.out.print("Client: ");
+// PacketForSend temp = new Gson().fromJson(in.nextLine(), PacketForSend.class);
+// String arguments = temp.open();
+//// System.out.println(arguments);
+//// System.out.print("Answer: ");
+// String result = cw.work(arguments);
+// pw.println(result);
+// }
+// } else {
+// String result = cw.work(console);
+// pw.println(result);
+// }
+// pw.flush();
+// pw.close();
+// in.close();
+// s.close();
+// ss.close();
+// }
         ServerSocketChannel ssc = ServerSocketChannel.open(); // открываем канал
         ssc.bind(new InetSocketAddress(40003)); // приделываем канал к порту
         ssc.configureBlocking(false); // делаем канал неблокирующим
@@ -63,7 +63,7 @@ public class Server {
         String console = "";
         while (true) {
             console = consoleEntering();
-            if (!console.equals("")) {
+            if (console.equals("save")) {
                 System.out.println(cw.work(console));
                 console = "";
             }
@@ -100,7 +100,7 @@ public class Server {
     }
 
     private static String consoleEntering() throws InterruptedException, IOException {
-        Thread.sleep(1);
+        Thread.sleep(10);
         int i;
         String s = "";
         while (System.in.available() != 0 && (i = System.in.read()) != 10) {
@@ -108,5 +108,4 @@ public class Server {
         }
         return s;
     }
-
 }

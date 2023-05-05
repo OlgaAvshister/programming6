@@ -1,4 +1,3 @@
-
 import com.google.gson.Gson;
 import commands.CommandsWorker;
 import commands.StaticWorker;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+
 // класс клиента, который будет работать с сервером
 public class Client {
     public static void main(String[] args) throws InterruptedException {
@@ -21,18 +21,15 @@ public class Client {
         Socket s = null; // создаём сокет, который будет работать на сервере
         try {
             boolean fin = false;
-            while (!fin) {
-                s = new Socket("localhost", 40003);
-                PrintWriter pw = new PrintWriter(s.getOutputStream()); // активизируем систему записи информации в сокет
-                Scanner send = new Scanner(System.in);
-                Scanner in = new Scanner(s.getInputStream());
-                if (packets.size() == 0) {
-                    System.out.print("You: ");
-                }
-                String words;
-                boolean fromScript = false;
-                boolean valid = false;
-                try {
+            try {
+                while (!fin) {
+                    Scanner send = new Scanner(System.in);
+                    if (packets.size() == 0) {
+                        System.out.print("You: ");
+                    }
+                    String words;
+                    boolean fromScript = false;
+                    boolean valid = false;
                     do {
                         if (packets.size() == 0) {
                             words = send.nextLine();
@@ -65,21 +62,36 @@ public class Client {
                         }
                     } while (!valid);
                     String json = new Gson().toJson(new PacketForSend(words));
+                    boolean go = false;
+                    for (int i = 0; i < 2; i++) {
+                        try {
+                            s = new Socket("localhost", 40003);
+                            go = true;
+                            break;
+                        } catch (IOException e) {
+                        }
+                    }
+                    if (!go) {
+                        throw new IOException();
+                    }
+                    Scanner in = new Scanner(s.getInputStream());
+                    PrintWriter pw = new PrintWriter(s.getOutputStream()); // активизируем систему записи информации в сокет
                     pw.println(json);
                     pw.flush();
                     String info = in.nextLine();
                     System.out.println("Server: " + info);
                     fin = info.equalsIgnoreCase("Спасибо за пользование программой");
-                } catch (NoSuchElementException nsee) {
-                    System.exit(1);
                 }
+            } catch (NoSuchElementException nsee) {
+                System.exit(0);
             }
         } catch (IOException e) {
             System.out.println("Нет доступа к серверу.");
         }
     }
 
-    private static boolean scriptWork(String words, ArrayList<PacketForSend> packets, ArrayList<Path> usedAdds, int position) throws IOException {
+    private static boolean scriptWork(String
+                                              words, ArrayList<PacketForSend> packets, ArrayList<Path> usedAdds, int position) throws IOException {
         boolean valid = true;
         words = words.substring(15).trim();
         Path path = Path.of(words);
@@ -182,7 +194,7 @@ public class Client {
                 result = Pattern.matches("[0-9]", arguments[1]) && Pattern.matches("[0-9]", arguments[2]);
             }
         }
-        if (arguments[0].equalsIgnoreCase("insert") && arguments.length == 8 && fromScript) {
+        if (arguments[0].equalsIgnoreCase("insert") && arguments.length == 8) {
             result = true;
         }
         if (arguments[0].equalsIgnoreCase("update") && arguments.length == 9) {

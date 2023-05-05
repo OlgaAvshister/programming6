@@ -104,6 +104,7 @@ public class CommandsWorker {
         easies.put("insert", new CInsert());
         easies.put("print_descending", new CPrint_Descending());
         easies.put("show", new CShow());
+        easies.put("save", new CSave(this.file));
         easies.put("history", new CHistory(this.commands));
         easies.put("exit", new CExit(this.file));
         hards.put("filter_less_than_speaking", new CFilter_Less_Than_Speaking());
